@@ -8,7 +8,7 @@ class MyApp(ShowBase):
 
         terrain = GeoMipTerrain("mySimpleTerrain")
         terrain.setHeightfield("Maps/simple.jpg")
-        terrain.getRoot().setSz(50)
+        terrain.getRoot().setSz(40)
         #terrain.setBruteforce(True)
         terrain.getRoot().reparentTo(render)
 
