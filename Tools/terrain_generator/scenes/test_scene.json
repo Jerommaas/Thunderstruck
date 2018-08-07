@@ -1,0 +1,19 @@
+{
+    "map_functions": [
+        {
+            "name": "Round Hill",
+            "class_name": "RoundHill",
+            "id": 2,
+            "children_ids": []
+        },
+        {
+            "name": "Transform",
+            "class_name": "Transform2d",
+            "id": 3,
+            "children_ids": [
+                2
+            ]
+        }
+    ],
+    "name": "first map"
+}
