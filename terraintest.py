@@ -27,22 +27,26 @@ class MyApp(ShowBase):
         terrain.getRoot().setTexture(myTexture)
         terrain.generate()
 
-        skysphere = loader.loadModel("SkySphere.bam")
-        skysphere.setBin('background', 1)
-        skysphere.setDepthWrite(0) 
-        skysphere.reparentTo(render)
+        self.skysphere = self.loader.loadModel("SkySphere.bam")
+        #self.skysphere.setBin('background', 1)
+        self.skysphere.setDepthWrite(0) 
+        self.skysphere.reparentTo(render)
+        self.taskMgr.add(self.skysphereTask, "SkySphere Task")
 
-        # Add a task to keep the sky dome fixed to the camera
-        def skysphereTask(task):
-          skysphere.setPos(base.camera, 0, 0, 0)
-          return task.cont
-        taskMgr.add(skysphereTask, "SkySphere Task")
+        
+        
         
         # Add a task to keep updating the terrain
         def updateTask(task):
           terrain.update()
           return task.cont
         taskMgr.add(updateTask, "update")
+
+    # Add a task to keep the sky dome fixed to the camera
+    def skysphereTask(self,task):
+      self.skysphere.setPos(self.cam.getPos())
+      #setpoc(base.cam,0,0,0) differs from setPos(base.cam.getPos()). latter stays at texture origen
+      return task.cont
 
         
 
