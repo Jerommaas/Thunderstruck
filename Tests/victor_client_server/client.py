@@ -19,10 +19,11 @@ from panda3d.core import ConnectionWriter
 from panda3d.core import PointerToConnection
 from panda3d.core import NetAddress
 
-from pandac.PandaModules import loadPrcFileData
+from panda3d.core import loadPrcFileData
 loadPrcFileData("", "window-type none")
-from direct.directbase import DirectStart
-from direct.task import Task
+# from direct.directbase import DirectStart
+# from direct.showbase.ShowBase import ShowBase
+from direct.task import Task 
  
 from panda3d.core import NetDatagram
 
@@ -34,17 +35,19 @@ class Client(object):
         self.cReader = QueuedConnectionReader(self.cManager, 0)
         self.cWriter = ConnectionWriter(self.cManager,0)
         
+        taskMgr = Task.TaskManager()
+        
         # how long until we give up trying to reach the server?
         timeout_in_miliseconds=3000  # 3 seconds
         
         self.myConnection=self.cManager.openTCPClientConnection(host,port,timeout_in_miliseconds)
         if not self.myConnection:
-            print("client: Failed to connect to server!")
+            print("{}: Failed to connect to server!".format(self.name) )
             return
 
         self.cReader.addConnection(self.myConnection)  # receive messages from server
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)
-        print("client: Successfully connected to server {} at {}!".format(port,host) )
+        print("{}: Successfully connected to server {} at {}!".format(self.name,port,host) )
  
         
     def tskReaderPolling(self,taskdata):

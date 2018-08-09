@@ -17,10 +17,11 @@ from panda3d.core import ConnectionWriter
 from panda3d.core import PointerToConnection
 from panda3d.core import NetAddress
 
-from pandac.PandaModules import loadPrcFileData
+from panda3d.core import loadPrcFileData
 loadPrcFileData("", "window-type none")
-from direct.directbase import DirectStart
-from direct.task import Task
+# from direct.directbase import DirectStart
+# from direct.showbase.ShowBase import ShowBase
+from direct.task import Task 
  
 from panda3d.core import NetDatagram
 from panda3d.core import Datagram
@@ -30,6 +31,8 @@ class Server(object):
     # https://www.panda3d.org/manual/index.php/Client-Server_Connection
     
     def __init__( self, host="localhost", port=5001 ):
+        taskMgr = Task.TaskManager()
+
         self.cManager = QueuedConnectionManager()
         self.cListener = QueuedConnectionListener(self.cManager, 0)
         self.cReader = QueuedConnectionReader(self.cManager, 0)

@@ -20,6 +20,8 @@ from server import Server
 from panda3d.core import NetDatagram 
 from panda3d.core import Datagram
 
+from direct.task import Task 
+
 class TestServer(Server):
     ''' Test sending a heartbeat to clients '''
     def __init__(self, host="localhost", port=5001 ):
@@ -52,19 +54,17 @@ if __name__ == "__main__":
     client1 = TestClient(port=port, host=host, name="Henk" )
     client2 = TestClient(port=port, host=host, name="Bert" )
 
-    
+    # run test
     tStart = time.time() 
     tLastHearbeat = tStart
     while time.time() < tStart + 10:
-        taskMgr.step()
-        if tLastHearbeat +1 < time.time():
+        Task.TaskManager().step() 
+        if tLastHearbeat + 1 < time.time():
             server.heartbeat()
             tLastHearbeat = time.time()
     
 
-    client1.Close()
-    client2.Close()
-
-    server.Close()
-
     # close
+    client1.Close()
+    client2.Close() 
+    server.Close()
