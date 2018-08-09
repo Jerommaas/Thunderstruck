@@ -12,10 +12,11 @@ import json
 
 
 class Config(object):
-    def __init__( self, file ):
+    def __init__( self, file="config_file.json" ):
         # Read file
         here = os.path.dirname(os.path.abspath(__file__))
-        with open( here+file, 'r') as f:
+        full_path = os.path.normpath(os.path.join(here, file))
+        with open( full_path, 'r') as f:
             self.json_config = json.load(f)
 
     def __getitem__(self, key):
@@ -29,7 +30,7 @@ class Config(object):
 
 if __name__ == "__main__":
 
-    config_file = "./config_file.json"
+    config_file = "config_file.json"
     config = Config( config_file )
 
     client_port = config["client"]["port"]
