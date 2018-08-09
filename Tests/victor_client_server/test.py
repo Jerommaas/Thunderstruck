@@ -21,16 +21,22 @@ from panda3d.core import NetDatagram
 from panda3d.core import Datagram
 
 class TestServer(Server):
-    ''' Test sending a heartbeat to clients every second '''
+    ''' Test sending a heartbeat to clients '''
     def __init__(self, host="localhost", port=5001 ):
         super().__init__(host=host, port=port )
-
-        # add heartbeat task
 
     def heartbeat(self ):     
         myPyDatagram=Datagram()   
         print("server: sending heartbeat to {} clients".format(len(self.activeConnections) ) )
         self.BroadcastMessage( myPyDatagram )
+
+
+class TestClient(Client):    
+    def ProcessReaderData( self, data ):
+        # TODO(vicdie): overwrite in derived classes
+        print("client: reading data!" )
+        pass
+
 
 
 if __name__ == "__main__":
@@ -39,13 +45,12 @@ if __name__ == "__main__":
     config = Config()
 
     port = 5001
+    host = config["server"]["host"]
 
-    server = TestServer( port=port, host=config["server"]["host"] )
-
-    # NOTE: start server before trying to connect with the clients
-
-    client1 = Client(port=port, host=config["client"]["host"] )
-    client2 = Client(port=port, host=config["client"]["host"] )
+    # start server and clients
+    server = TestServer( port=port, host=host )
+    client1 = TestClient(port=port, host=host )
+    client2 = TestClient(port=port, host=host )
 
     
     tStart = time.time() 

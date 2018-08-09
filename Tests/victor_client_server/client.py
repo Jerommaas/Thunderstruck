@@ -58,8 +58,7 @@ class Client(object):
         return Task.cont
 
     def ProcessReaderData( self, data ):
-        # TODO(vicdie): overwrite in derived classes
-        print("client: reading data!" )
+        # TODO(vicdie): overwrite in derived classes 
         pass
 
     def Close( self ):
