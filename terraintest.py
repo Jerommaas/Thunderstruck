@@ -1,4 +1,6 @@
 from panda3d.core import GeoMipTerrain
+from panda3d.core import Vec3
+from panda3d.core import Texture, TextureStage, DirectionalLight, AmbientLight, TexGenAttrib, VBase4
 from direct.task import Task
 from direct.showbase.ShowBase import ShowBase
 
@@ -27,11 +29,46 @@ class MyApp(ShowBase):
         terrain.getRoot().setTexture(myTexture)
         terrain.generate()
 
-        self.skysphere = self.loader.loadModel("SkySphere.bam")
-        #self.skysphere.setBin('background', 1)
-        self.skysphere.setDepthWrite(0) 
-        self.skysphere.reparentTo(render)
-        self.taskMgr.add(self.skysphereTask, "SkySphere Task")
+
+        #"""
+        ##-- create a skydome from scratch --##
+        # this setup creates a unit inverted globe, textures the inside with a cubeMap and centers it.
+        # it 
+        self.skybox = loader.loadModel("Maps/skydome1/InvertedSphere.egg")
+        # create 3D texture coordinates on sphere
+        self.skybox.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
+        self.skybox.setTexProjector(TextureStage.getDefault(), render, self.skybox)
+        self.skybox.setTexPos(TextureStage.getDefault(), 0, 0, 0)
+        self.skybox.setTexScale(TextureStage.getDefault(), .5)
+        # load a cube map texture: (# should run 0-5)
+        tex = loader.loadCubeMap('Maps/skydome1/lakes_#.png')
+        # and give it to inverted sphere
+        self.skybox.setTexture(tex)
+        #"""
+
+
+        ##-- (option 2: not working?!) load a skydome from a bam file --##
+        # SkySphere.bam can be created by running skySphere.py
+        #self.skybox = self.loader.loadModel("SkySphere.bam")
+
+
+
+        # origen of model is on the surface. Let's move to the centre 
+        # (and make it a little larger to permit for difference between cam and camera)
+        self.skybox.setPos(0,0.5,0)
+        self.skybox.setScale(2)
+        # altough parented by camera, tell to ignore camera rotations:
+        self.skybox.setCompass()
+        # tell renderer to use it as background, and exclude it from depth buffer
+        self.skybox.set_bin("background", 0)
+        self.skybox.set_depth_write(0)
+        # ignore light effects?
+        self.skybox.setLightOff()
+        # and slave it to the camera
+        self.skybox.wrtReparentTo(self.camera) # note: cam vs. camaera!
+        
+        #base.oobe()
+
 
         
         
@@ -41,12 +78,6 @@ class MyApp(ShowBase):
           terrain.update()
           return task.cont
         taskMgr.add(updateTask, "update")
-
-    # Add a task to keep the sky dome fixed to the camera
-    def skysphereTask(self,task):
-      self.skysphere.setPos(self.cam.getPos())
-      #setpoc(base.cam,0,0,0) differs from setPos(base.cam.getPos()). latter stays at texture origen
-      return task.cont
 
         
 

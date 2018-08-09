@@ -17,17 +17,24 @@ class SkySphere(DirectObject):
         tex = loader.loadCubeMap('Maps/skydome1/lakes_#.png')
         # and give it to inverted sphere
         self.sphere.setTexture(tex)
-        # ignore light ?
-        self.sphere.setLightOff()
-        # re-size sphere (1km diameter)
-        self.sphere.setScale(1000)
-
-        # and render the sky box
-        self.sphere.reparentTo(render)
-
         #We don't want't to do this all the time, so save it. BAM!
         result = self.sphere.writeBamFile("SkySphere.bam")
         print('skybox saved to BAM successully: '+str(result)) #print if we succeeded...
+
+        self.sphere.set_bin("background", 0)
+        self.sphere.setCompass()
+        # ignore light ?
+        self.sphere.setLightOff()
+        # re-size sphere (1km diameter)
+        
+        self.sphere.setPos(0,0.5,0)
+        self.sphere.setScale(2)
+        
+
+        # and render the sky box
+        self.sphere.wrtReparentTo(camera)
+        
+        base.oobe()
 
 SS = SkySphere()
 run()
