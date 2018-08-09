@@ -34,7 +34,7 @@ class TestServer(Server):
 class TestClient(Client):    
     def ProcessReaderData( self, data ):
         # TODO(vicdie): overwrite in derived classes
-        print("client: reading data!" )
+        print("{}: reading data!".format(self.name) )
         pass
 
 
@@ -49,8 +49,8 @@ if __name__ == "__main__":
 
     # start server and clients
     server = TestServer( port=port, host=host )
-    client1 = TestClient(port=port, host=host )
-    client2 = TestClient(port=port, host=host )
+    client1 = TestClient(port=port, host=host, name="Henk" )
+    client2 = TestClient(port=port, host=host, name="Bert" )
 
     
     tStart = time.time() 

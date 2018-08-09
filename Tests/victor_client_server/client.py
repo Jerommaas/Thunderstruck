@@ -27,7 +27,8 @@ from direct.task import Task
 from panda3d.core import NetDatagram
 
 class Client(object):
-    def __init__( self, host="localhost", port=5001 ): 
+    def __init__( self, host="localhost", port=5001, name="client"): 
+        self.name = name
         
         self.cManager = QueuedConnectionManager()
         self.cReader = QueuedConnectionReader(self.cManager, 0)
