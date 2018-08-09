@@ -1,0 +1,13 @@
+{
+    "client": 
+        {
+            "port": 9876,
+            "host": "localhost"
+        },
+    "server": 
+        {
+            "port": 9875,
+            "host": "localhost"
+        }
+    
+}
