@@ -52,7 +52,8 @@ class RoundHill(map2d):
     def __init__(self, name="Round Hill"):
         super().__init__(name=name)  
     def at(self, x, y ):
-        return np.sin(x**2 + y**2) / (1 + x**2 + y**2)
+        r2 = (x**2 + y**2)
+        return  1 / (r2+1)
 
 class Transform2d(map2d):
     def __init__(self,childMap=None, x=1, y=2, rot=np.pi, name="Transform"):
@@ -61,7 +62,7 @@ class Transform2d(map2d):
             self.children = [childMap]
     def at(self, x, y ):
         #TODO(victor): apply transformation to x and y 
-        return self.map.at(x,y)
+        return self.children[0].at(x,y)
 
 
 

@@ -7,7 +7,7 @@
             "children_ids": []
         },
         {
-            "name": "Transform",
+            "name": "<Main>",
             "class_name": "Transform2d",
             "id": 3,
             "children_ids": [

@@ -13,12 +13,14 @@ class Generator(object):
         if scene==None:
             scene=Scene()
         self.scene = scene
-        print("Generator hoihoi")
+        print("Generator.__init__()")
 
 
 
 
 if __name__ == "__main__":
     # test gui
-    gui = Generator()
+    generator = Generator()
+
+
 

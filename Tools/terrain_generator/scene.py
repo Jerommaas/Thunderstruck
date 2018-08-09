@@ -14,9 +14,10 @@ import numpy as np
 import json
 
 class Scene(object):
-    def __init__(self, sceneFile=None ):
+    def __init__(self, sceneFile="scenes/test_scene.json"  ):
         self.sceneFile = sceneFile
         self.map2d_list = []
+        self.map = None
         print("Scene.__init__()")
         self.load( sceneFile )
 
@@ -46,6 +47,11 @@ class Scene(object):
             for obj in self.map2d_list:
                 obj.children = [ id_dict[i_id] for i_id in obj.children_ids ] 
 
+            # the root function is the one named "<Main>" 
+            main_node = list( filter(lambda x: x.name == "<Main>", self.map2d_list) )[0]
+            self.map = main_node
+            print( "main node: {}".format(main_node))
+
             print( "\n:" )
 
     def save(self, file=None):
@@ -63,9 +69,7 @@ class Scene(object):
         return file
 
     def at(self, x, y):
-        return np.sin(x**2 + y**2) / (1 + x**2 + y**2)
-        # obj = FlatSurface()
-        # return obj.at(x,y)
+        return self.map.at( x, y )
 
     def add( self, obj ):
         # TODO(victor): once other types of objects are allowed, add it to the correct list
@@ -88,6 +92,7 @@ if __name__ == "__main__":
         transformedHill = Transform2d( hill, x=1, y=2, rot=np.pi ) 
         scene.add( hill )
         scene.add( transformedHill )
+    
 
     print( "objects:" )
     for obj in scene.map2d_list:
