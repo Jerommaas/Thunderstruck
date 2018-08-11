@@ -56,7 +56,7 @@ def Build():
 
     render.setShaderAuto()
     filters = CommonFilters(base.win, base.cam)
-    filterok = filters.setBloom(blend=(0, 0, 0, 1), desat=-0.5, mintrigger =0.1, intensity=-8.0, size="medium")
+    filterok = filters.setBloom(blend=(0, 0, 0, 1), desat=-0.5, mintrigger =0.1, intensity=8.0, size="medium")
 
     # ass some light
     
