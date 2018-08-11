@@ -1,6 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 import Entities.Terrain as Terrain
-from Controls import ControlManager
+import Controls.Manager as ControlManager
 
 class Thunderstruck_server():
     def __init__(self):
