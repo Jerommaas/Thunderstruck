@@ -1,3 +1,4 @@
+#import direct.directbase.DirectStart
 from panda3d.core import GeoMipTerrain
 from panda3d.core import Vec3
 from panda3d.core import Texture, TextureStage, DirectionalLight, AmbientLight, TexGenAttrib, VBase4
@@ -30,42 +31,33 @@ class MyApp(ShowBase):
         terrain.generate()
 
 
-        #"""
-        ##-- create a skydome from scratch --##
-        # this setup creates a unit inverted globe, textures the inside with a cubeMap and centers it.
-        # it 
-        self.skybox = loader.loadModel("Maps/skydome1/InvertedSphere.egg")
-        # create 3D texture coordinates on sphere
-        self.skybox.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
-        self.skybox.setTexProjector(TextureStage.getDefault(), render, self.skybox)
-        self.skybox.setTexPos(TextureStage.getDefault(), 0, 0, 0)
-        self.skybox.setTexScale(TextureStage.getDefault(), .5)
-        # load a cube map texture: (# should run 0-5)
-        tex = loader.loadCubeMap('Maps/skydome1/lakes_#.png')
-        # and give it to inverted sphere
-        self.skybox.setTexture(tex)
-        #"""
+        ##-- load a skydome from a bam file --##
+        # this skydome is a small inverted sphere (inverted = back culling makes it transparent outside-in instead of inside-out)
+        # that is wrapped around the camera (you can see what's happening by turning on base.oobe(), with togles out of body experience mode)
+        # the camera is set as parent, such that the dome will stay centered around the camera.
+        # compass makes sure that rotations of the camera are ignored, allowing you to look around the skydome.
+        # the sphere is kept small, but disabling depth buffer and ensuring it is the first thing added to the render buffer alllows us to create the illusion that it is infinitely far away.
+        # note: SkySphere.bam has to be be re-created for each Panda3D version. you can do so by running sky Sphere.py
 
-
-        ##-- (option 2: not working?!) load a skydome from a bam file --##
-        # SkySphere.bam can be created by running skySphere.py
-        #self.skybox = self.loader.loadModel("SkySphere.bam")
-
-
+        # load model (sphere + texture)
+        self.skybox = self.loader.loadModel("SkySphere.bam")
+        # tell renderer how to project the texture to this sphere
+        self.skybox.setTexProjector(TextureStage.getDefault(), render, self.skybox) 
 
         # origen of model is on the surface. Let's move to the centre 
-        # (and make it a little larger to permit for difference between cam and camera)
+        # (and make it a little larger to prevent it from intersecting the camera's fustrum)
         self.skybox.setPos(0,0.5,0)
         self.skybox.setScale(2)
+        # and slave it to the camera
+        self.skybox.wrtReparentTo(self.camera) # note: cam vs. camera! (cam will make skydome look normal even in oobe mode)
         # altough parented by camera, tell to ignore camera rotations:
         self.skybox.setCompass()
-        # tell renderer to use it as background, and exclude it from depth buffer
+        # tell renderer to use it as background (i.e. first to be rendered), and exclude it from depth buffer
         self.skybox.set_bin("background", 0)
         self.skybox.set_depth_write(0)
         # ignore light effects?
         self.skybox.setLightOff()
-        # and slave it to the camera
-        self.skybox.wrtReparentTo(self.camera) # note: cam vs. camaera!
+        
         
         #base.oobe()
 

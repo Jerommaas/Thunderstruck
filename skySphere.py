@@ -34,7 +34,7 @@ class SkySphere(DirectObject):
         # and render the sky box
         self.sphere.wrtReparentTo(camera)
         
-        base.oobe()
+        #base.oobe()
 
 SS = SkySphere()
 run()
