@@ -1,4 +1,9 @@
 from panda3d.core import Texture, TextureStage, DirectionalLight, AmbientLight, TexGenAttrib, VBase4
+from panda3d.core import ColorBlendAttrib, LPoint3, LVector4
+from direct.filter.CommonFilters import CommonFilters
+from panda3d.core import PandaNode, NodePath
+import sys
+import os
 
 def Build():
     ##-- load a skydome from a bam file --##
@@ -14,11 +19,19 @@ def Build():
     # create 3D texture coordinates on sphere
     skybox.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
     skybox.setTexProjector(TextureStage.getDefault(), render, skybox)
+    #skybox.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
+    #skybox.setTexProjector(TextureStage.getDefault(), render, skybox)
 
     # create a cube map texture from 6 separate textures: (# should run 0-5)
     tex = loader.loadCubeMap('Entities/Maps/skydome1/lakes_#.png')
+    tex2 = loader.loadCubeMap('Entities/Maps/skydome1/lakes_#_bloom.png')
+    ts = TextureStage('ts')
+    skybox.setTexGen(ts, TexGenAttrib.MWorldPosition)
+    skybox.setTexProjector(ts, render, skybox)
+    ts.setMode(TextureStage.MModulateGlow)
     # and give it to inverted sphere
-    skybox.setTexture(tex)
+    #skybox.setTexture(TextureStage.getDefault(),tex)
+    skybox.setTexture(ts,tex)
 
     #TODO: make sure that this cube map and .eeg model are loaded from a BAM file for faster loading. (and don't forget to re-set textProjector after loading!)
     # load model (sphere + texture)
@@ -39,5 +52,27 @@ def Build():
     skybox.set_depth_write(0)
     # ignore light effects?
     skybox.setLightOff()
+
+
+    render.setShaderAuto()
+    filters = CommonFilters(base.win, base.cam)
+    filterok = filters.setBloom(blend=(0, 0, 0, 1), desat=-0.5, mintrigger =0.1, intensity=-8.0, size="medium")
+
+    # ass some light
+    
+    dlight = DirectionalLight('dlight')
+    alight = AmbientLight('alight')
+    dlnp = render.attachNewNode(dlight)
+    alnp = render.attachNewNode(alight)
+    dlight.setColor((0.2, 0.7, 0.2, 1))
+    alight.setColor((0.2, 0.2, 0.2, 1))
+    dlnp.setHpr(0, -60, 0)
+    render.setLight(dlnp)
+    render.setLight(alnp)
+   
+
+
+
+
 
     #base.oobe()
