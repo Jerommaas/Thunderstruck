@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 import Entities.Terrain as Terrain
 import Entities.skyDome as skyDome
+import Controls.Manager as ControlManager
 
 class Thunderstruck_server():
     def __init__(self):
@@ -36,7 +37,7 @@ class Thunderstruck_client(ShowBase):
                 # Sparks, fire, LIGHTNING
 
         # User input
-            # Controls- key bindings
+        self.CM = ControlManager.ControlManager()
 
         # Server communication
             # Send User controls
