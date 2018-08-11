@@ -24,7 +24,7 @@ def Build():
 
     # create a cube map texture from 6 separate textures: (# should run 0-5)
     tex = loader.loadCubeMap('Entities/Maps/skydome1/lakes_#.png')
-    tex2 = loader.loadCubeMap('Entities/Maps/skydome1/lakes_#_bloom.png')
+    #tex2 = loader.loadCubeMap('Entities/Maps/skydome1/lakes_#_bloom.png')
     ts = TextureStage('ts')
     skybox.setTexGen(ts, TexGenAttrib.MWorldPosition)
     skybox.setTexProjector(ts, render, skybox)
@@ -51,7 +51,7 @@ def Build():
     skybox.set_bin("background", 0)
     skybox.set_depth_write(0)
     # ignore light effects?
-    skybox.setLightOff()
+    #skybox.setLightOff()
 
 
     render.setShaderAuto()
