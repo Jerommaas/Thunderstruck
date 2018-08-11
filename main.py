@@ -1,5 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 import Entities.Terrain as Terrain
+import Entities.skyDome as skyDome
 
 class Thunderstruck_server():
     def __init__(self):
@@ -25,6 +26,7 @@ class Thunderstruck_client(ShowBase):
 
         # Entities
         Terrain.Build()
+        skyDome.Build()
             # Load terrain
                 # Skybox
                 # Weather
