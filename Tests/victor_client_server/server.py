@@ -37,7 +37,8 @@ class Server(object):
         self.cListener = QueuedConnectionListener(self.cManager, 0)
         self.cReader = QueuedConnectionReader(self.cManager, 0)
         self.cWriter = ConnectionWriter(self.cManager,0) 
-        self.activeConnections=[] # We'll want to keep track of these later
+        self.activeConnections = [] # We'll want to keep track of these later
+        self.readerCallbacks = []
 
         backlog=1000 #If we ignore 1,000 connection attempts, something is wrong!
         self.tcpSocket = self.cManager.openTCPServerRendezvous(port,backlog)
@@ -68,21 +69,26 @@ class Server(object):
         
     def tskReaderPolling(self,taskdata):
         # reader callback 
-        if self.cReader.dataAvailable():
-            datagram=NetDatagram()  # catch the incoming data in this instance
-            # Check the return value; if we were threaded, someone else could have
-            # snagged this data before we did
-            if self.cReader.getData(datagram): 
-                self.ProcessReaderData( datagram )
+        if not self.cReader.dataAvailable():
+            return Task.cont
+             
+        # catch the incoming data in this instance
+        # Check the return value; if we were threaded, someone else could have
+        # snagged this data before we did
+        datagram=NetDatagram()  
+        if not self.cReader.getData(datagram): 
+            return Task.cont
+
+        for callback in self.readerCallbacks:
+            callback( datagram ) 
+            
         return Task.cont
+        
+    def addReaderCallback( self, callbackFunction ):
+        self.readerCallbacks.append( callbackFunction )
 
-    def ProcessReaderData(self, data):
-        #TODO(vicdie): overwrite in derived classes
-        print("NotImplementedError: Server.ProcessReaderData()")
-        pass
-
-    
     def BroadcastMessage(self, datagram):
+        # send the same message to all clients
         for client in self.activeConnections:
             self.cWriter.send(datagram,client)
 

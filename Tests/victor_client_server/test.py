@@ -11,10 +11,9 @@ from sys import path
 from os import getcwd
 import time
 
-path.append(getcwd() + "\\..\\..\\Tools\\game_config\\")  # TODO(victor): check if indeed windows
+path.append(getcwd() + "\\..\\..\\Tools\\game_config\\")  
 from config import Config
 
-path.append(getcwd() + "\\..\\..\\Tools\\game_config\\")  # TODO(victor): check if indeed windows
 from client import Client
 from server import Server
 from panda3d.core import NetDatagram 
@@ -32,13 +31,21 @@ class TestServer(Server):
         print("server: sending heartbeat to {} clients".format(len(self.activeConnections) ) )
         self.BroadcastMessage( myPyDatagram )
 
+    def ProcessReaderData(self, data): 
+        # Todo: figure out who sent it
+        print("Server: receiving data")
 
-class TestClient(Client):    
+
+class TestClient(Client):   
+    ''' Test receiving heartbeat from server ''' 
     def ProcessReaderData( self, data ):
-        # TODO(vicdie): overwrite in derived classes
         print("{}: reading data!".format(self.name) )
         pass
 
+    def SendMessage(self): 
+        print( "{}: sending message to server".format(self.name) )
+        myPyDatagram=Datagram() 
+        self.cWriter.send(myPyDatagram,self.myConnection)
 
 
 if __name__ == "__main__":
@@ -46,7 +53,7 @@ if __name__ == "__main__":
 
     config = Config()
 
-    port = 5001
+    port = config["server"]["port"]
     host = config["server"]["host"]
 
     # start server and clients
@@ -55,14 +62,28 @@ if __name__ == "__main__":
     client2 = TestClient(port=port, host=host, name="Bert" )
 
     # run test
+    # TODO(vicdie): run server and clients in separate threads, 
+    # move Task.TaskManager().step() stuff 
+    print("======= Server->Client =======")
+
     tStart = time.time() 
     tLastHearbeat = tStart
     while time.time() < tStart + 10:
-        Task.TaskManager().step() 
+        Task.TaskManager().step() # perform a step as often as possible
         if tLastHearbeat + 1 < time.time():
             server.heartbeat()
             tLastHearbeat = time.time()
     
+    print("======= Client->Server =======")
+
+    tStart = time.time() 
+    tLastHearbeat = tStart
+    while time.time() < tStart + 10:
+        Task.TaskManager().step() # perform a step as often as possible
+        if tLastHearbeat + 1 < time.time():
+            client1.SendMessage()
+            client2.SendMessage()
+            tLastHearbeat = time.time()
 
     # close
     client1.Close()
