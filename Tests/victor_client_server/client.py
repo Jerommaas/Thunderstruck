@@ -35,12 +35,14 @@ class Client(object):
         self.cReader = QueuedConnectionReader(self.cManager, 0)
         self.cWriter = ConnectionWriter(self.cManager,0)
         
+        self.readerCallbacks = []
+
         taskMgr = Task.TaskManager()
         
         # how long until we give up trying to reach the server?
         timeout_in_miliseconds=3000  # 3 seconds
         
-        self.myConnection=self.cManager.openTCPClientConnection(host,port,timeout_in_miliseconds)
+        self.myConnection = self.cManager.openTCPClientConnection(host,port,timeout_in_miliseconds)
         if not self.myConnection:
             print("{}: Failed to connect to server!".format(self.name) )
             return
@@ -51,15 +53,24 @@ class Client(object):
  
         
     def tskReaderPolling(self,taskdata):
-        # reader callback
-        # print("client: tskListenerPolling() callback!")
-        if self.cReader.dataAvailable():
-            datagram=NetDatagram()  # catch the incoming data in this instance
-            # Check the return value; if we were threaded, someone else could have
-            # snagged this data before we did
-            if self.cReader.getData(datagram): 
-                self.ProcessReaderData( datagram )
+        # reader callback 
+        if not self.cReader.dataAvailable():
+            return Task.cont
+             
+        # catch the incoming data in this instance
+        # Check the return value; if we were threaded, someone else could have
+        # snagged this data before we did
+        datagram=NetDatagram()  
+        if not self.cReader.getData(datagram): 
+            return Task.cont
+
+        for callback in self.readerCallbacks:
+            callback( datagram ) 
+            
         return Task.cont
+
+    def addReaderCallback( self, callbackFunction ):
+        self.readerCallbacks.append( callbackFunction )
 
     def ProcessReaderData( self, data ):
         # TODO(vicdie): overwrite in derived classes 
