@@ -1,4 +1,5 @@
 import numpy as np
+
 modelfolder = "Entities/Objects/Models/"
 
 class Basic:
