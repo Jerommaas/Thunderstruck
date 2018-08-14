@@ -40,7 +40,7 @@ class Arrows(DirectObject):
         self.LR_arrows()
 
     def LR_arrows(self):
-        self.CM.Steer(self.RightPressed-self.LeftPressed)
+        self.CM.Steer(self.LeftPressed-self.RightPressed)
 
         # Throttle controls
     def Up_press(self):

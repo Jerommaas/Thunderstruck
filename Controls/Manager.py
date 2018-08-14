@@ -7,8 +7,9 @@ from . import xinput
 from operator import attrgetter
 
 class ControlManager(DirectObject):
-    def __init__(self):
+    def __init__(self,Truck):
         self.accept('escape', sys.exit)
+        self.Truck = Truck
 
         # Start different control inputs
         self.Arrows = Keyboard.Arrows(self)
@@ -34,12 +35,15 @@ class ControlManager(DirectObject):
     def Steer(self, value):
         # Set steering direction: [-1,1] [left, right]
         print("Steer", value)
+        self.Truck.Steer = value
 
     def Throttle(self, value):
         # Set throttle: [0,1] [idle, full]
         print("Throttle", value*100,'%')
+        self.Truck.Throttle = value
 
     def Brake(self, value):
         # Set Brake: [0,1] [none, full]
         print("Brake", value)
+        self.Truck.Brake = value
         #########################################################

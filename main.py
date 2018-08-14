@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 import Entities.Terrain as Terrain
 import Entities.skyDome as SkyDome
+import Entities.WorldClock as WorldClock
 import Controls.Manager as ControlManager
 
 from Entities.Objects import *
@@ -27,6 +28,9 @@ class Thunderstruck_client(ShowBase):
     def __init__(self,server):
         ShowBase.__init__(self)
 
+        # Init the Global Clock
+        Clock = WorldClock.WorldClock()
+
         # ----- ENTITIES -----
         # World
         Terrain.Build()
@@ -34,13 +38,13 @@ class Thunderstruck_client(ShowBase):
         #Light Sources?
         
         # Objects
-        T = Trucks.Basic()
+        T = Trucks.Basic(Clock)
         
         # Particles
            # Sparks, fire, LIGHTNING
 
         # User input
-        self.CM = ControlManager.ControlManager()
+        self.CM = ControlManager.ControlManager(T)
 
         # Server communication
             # Send User controls
