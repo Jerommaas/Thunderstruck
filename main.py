@@ -1,7 +1,9 @@
 from direct.showbase.ShowBase import ShowBase
 import Entities.Terrain as Terrain
-import Entities.skyDome as skyDome
+import Entities.skyDome as SkyDome
 import Controls.Manager as ControlManager
+
+from Entities.Objects import *
 
 class Thunderstruck_server():
     def __init__(self):
@@ -25,16 +27,17 @@ class Thunderstruck_client(ShowBase):
     def __init__(self,server):
         ShowBase.__init__(self)
 
-        # Entities
+        # ----- ENTITIES -----
+        # World
         Terrain.Build()
-        skyDome.Build()
-            # Load terrain
-                # Skybox
-                # Weather
-                # Lighting
-            # Objects
-            # Particles
-                # Sparks, fire, LIGHTNING
+        SkyDome.Build()
+        #Light Sources?
+        
+        # Objects
+        T = Trucks.Basic()
+        
+        # Particles
+           # Sparks, fire, LIGHTNING
 
         # User input
         self.CM = ControlManager.ControlManager()
