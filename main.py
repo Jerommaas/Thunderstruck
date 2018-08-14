@@ -34,7 +34,7 @@ class Thunderstruck_client(ShowBase):
         #Light Sources?
         
         # Objects
-        T = Trucks.Truck01()
+        T = Trucks.Basic()
         
         # Particles
            # Sparks, fire, LIGHTNING
