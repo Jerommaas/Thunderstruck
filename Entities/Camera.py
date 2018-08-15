@@ -2,6 +2,8 @@ import numpy as np
 from direct.task import Task
 
 class Camera:
+    Dist2Truck = 35 #[m]
+    Azimuth    = 8 #[deg] position of camera wrt truck
     def __init__(self,World):
         # Stiekem bestaat er al een world.camera object
         self.World = World
@@ -10,17 +12,18 @@ class Camera:
         # Of course, must be replaced by networkcommunication
         self.Truck = World.Truck1
 
-        taskMgr.add(self.FollowTruck, "Set Camera")
+        # Relative position wrt Truck
+        self.ComputePosition()
 
-    def FollowTruck(self, task):
-        angleDegrees = task.time * 25.0
-        angleRadians = angleDegrees * (3.14 / 180.0)
-        dist = 20*np.array([np.sin(angleRadians),np.cos(angleRadians),1/20])
-        truckpos = np.array(self.Truck.m.getPos())
-        campos = truckpos + dist
-        print(truckpos,campos)
+    def ComputePosition(self):
+        AzRad = np.deg2rad(self.Azimuth)
+        self.Position = self.Dist2Truck * np.array([0, -np.cos(AzRad), np.sin(AzRad)])
 
-        self.World.camera.setPos(tuple(campos))
+    def Update(self):
+        TruckPosition = np.array(self.Truck.m.getPos())
+        CamDistance = np.dot(self.Position,self.Truck.World2Truck)
+        CamPosition = TruckPosition + CamDistance
 
-        self.World.camera.setHpr(angleDegrees, 0, 0)
-        return Task.cont
+        self.World.camera.setPos(tuple(CamPosition))
+
+        self.World.camera.setHpr(self.Truck.m.getH(), 0, 0)

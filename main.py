@@ -29,7 +29,7 @@ class Thunderstruck_client(ShowBase):
         ShowBase.__init__(self)
 
         # Init the Global Clock
-        self.Clock = Clock.Clock()
+        self.Clock = Clock.Clock(self)
 
         # ----- ENTITIES -----
         # World

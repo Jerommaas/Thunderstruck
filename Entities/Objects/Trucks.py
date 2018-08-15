@@ -1,4 +1,5 @@
 import numpy as np
+from Tools import *
 
 modelfolder = "Entities/Objects/Models/"
 
@@ -21,6 +22,7 @@ class Basic:
         self.Model()
         self.StartLocation()
         self.TruckParams()
+        self.RotationMatrices()
         World.Clock.UpdateMe(self)
 
     def Model(self):
@@ -49,6 +51,10 @@ class Basic:
         self.Vbody = np.array([0.,0.,0.]) #[m/s]
         self.Vworld = np.array([0.,0.,0.]) #[m/s]
 
+    def RotationMatrices(self):
+        # Use attitude to compute Euler Transformation Matrices
+        self.Truck2World, self.World2Truck = EulerAngles.RotMatDeg(self.m.getH(), self.m.getP(), self.m.getR())
+
     def Update(self,dt):
         # Get Euler Rotation Matrices
         Truck2World, World2Truck = EulerAngles.RotMatDeg(self.m.getH(), self.m.getP(), self.m.getR())
@@ -67,7 +73,7 @@ class Basic:
         self.Vbody[1] = max(self.Vbody[1],0)
         
         # Change frame of reference
-        self.Vworld = np.dot(self.Vbody,World2Truck)
+        self.Vworld = np.dot(self.Vbody,self.World2Truck)
 
         # Update Position
         p = self.m.getPos()
@@ -75,3 +81,6 @@ class Basic:
         self.m.setX(newP[0])
         self.m.setY(newP[1])
         self.m.setZ(newP[2])
+
+        # New Rotation Matrices
+        self.RotationMatrices()
