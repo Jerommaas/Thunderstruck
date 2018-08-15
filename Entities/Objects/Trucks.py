@@ -18,11 +18,11 @@ class Basic:
     rho = 1.225 #[kg/m3] air density
     gravity = 9.81 #[m/s2]
 
-    def __init__(self, Clock):
+    def __init__(self, World):
         self.Model()
         self.StartLocation()
         self.TruckParams()
-        Clock.UpdateMe(self)
+        World.Clock.UpdateMe(self)
 
     def Model(self):
         self.m = loader.loadModel(self.eggname)

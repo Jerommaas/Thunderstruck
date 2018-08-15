@@ -1,7 +1,7 @@
 from direct.task import Task
 
 FPS = 30
-class WorldClock():
+class Clock():
     def __init__(self):
         self.dt = 1/FPS
         self.dtcounter = 0

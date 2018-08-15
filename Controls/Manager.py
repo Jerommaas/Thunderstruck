@@ -7,9 +7,12 @@ from . import xinput
 from operator import attrgetter
 
 class ControlManager(DirectObject):
-    def __init__(self,Truck):
+    def __init__(self,World):
         self.accept('escape', sys.exit)
-        self.Truck = Truck
+
+        # Reference to the controlled truck!
+        # Of course, must be replaced by networkcommunication
+        self.Truck = World.Truck1
 
         # Start different control inputs
         self.Arrows = Keyboard.Arrows(self)
