@@ -43,6 +43,7 @@ class Thunderstruck_client(ShowBase):
         # Particles
            # Sparks, fire, LIGHTNING
 
+        self.Camera = Camera.Camera(self)
         # User input
         self.CM = Manager.ControlManager(self)
 
