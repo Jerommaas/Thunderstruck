@@ -5,6 +5,7 @@ modelfolder = "Entities/Objects/Models/"
 
 class Basic:
     eggname = modelfolder+"Truck01/truck_01.egg"
+    #eggname = modelfolder+"Environment/pine_tree_01.egg"
 
     # Static Class Properties
     turnradius = 15 #[m]
@@ -75,11 +76,13 @@ class Basic:
         # Change frame of reference
         self.Vworld = np.dot(self.Vbody,self.World2Truck)
 
+
         # Update Position
         p = self.m.getPos()
         newP = np.array(p) + self.Vworld * dt
         self.m.setX(newP[0])
         self.m.setY(newP[1])
+
         self.m.setZ(newP[2])
 
         # New Rotation Matrices
