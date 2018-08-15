@@ -2,7 +2,8 @@ from direct.task import Task
 
 FPS = 30
 class Clock():
-    def __init__(self):
+    def __init__(self,World):
+        self.World = World
         self.dt = 1/FPS
         self.dtcounter = 0
         # List of objects that have an Update(dt) function that needs to be called
@@ -19,9 +20,11 @@ class Clock():
                 # Step the simulation
                 for Obj in self.UpdateList:
                     Obj.Update(self.dt)
+            # Camera position is only updated once per frame!
+            self.World.Camera.Update()
             return task.cont
 
-        taskMgr.doMethodLater(1.0, simulationTask, "Physics Simulation")
+        taskMgr.add(simulationTask, "Physics Simulation")
 
     def UpdateMe(self,Obj):
         # Add the Object to the list of appendables

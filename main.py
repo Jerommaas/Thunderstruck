@@ -29,7 +29,7 @@ class Thunderstruck_client(ShowBase):
         ShowBase.__init__(self)
 
         # Init the Global Clock
-        self.Clock = Clock.Clock()
+        self.Clock = Clock.Clock(self)
 
         # ----- ENTITIES -----
         # World
@@ -43,6 +43,7 @@ class Thunderstruck_client(ShowBase):
         # Particles
            # Sparks, fire, LIGHTNING
 
+        self.Camera = Camera.Camera(self)
         # User input
         self.CM = Manager.ControlManager(self)
 

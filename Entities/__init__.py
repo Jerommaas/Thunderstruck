@@ -1,1 +1,1 @@
-__all__ = ['Terrain','skyDome','Clock']
+__all__ = ['Terrain','skyDome','Clock','Camera']
