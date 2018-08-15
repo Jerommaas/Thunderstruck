@@ -50,6 +50,9 @@ class Basic:
         self.Vworld = np.array([0.,0.,0.]) #[m/s]
 
     def Update(self,dt):
+        # Get Euler Rotation Matrices
+        Truck2World, World2Truck = EulerAngles.RotMatDeg(self.m.getH(), self.m.getP(), self.m.getR())
+
         # Perform turning
         Yaw = self.m.getH()
         turnrate = self.Steer * 360/4 # Hardcoded turnrate for now
@@ -57,13 +60,18 @@ class Basic:
         self.m.setH(newYaw)
 
         # Only horizontal driving now, foeck gravity and terrain!
-        frontacc = (self.Throttle*self.Fengine - self.Brake*self.Fbrake)/self.mass
+        Fdrag = 0.5 * self.rho * self.Vbody[1]**2 * self.Cd
+        frontacc = (self.Throttle*self.Fengine - self.Brake*self.Fbrake - Fdrag)/self.mass
         # New velocity
         self.Vbody[1] = self.Vbody[1]+frontacc*dt
         self.Vbody[1] = max(self.Vbody[1],0)
+        
+        # Change frame of reference
+        self.Vworld = np.dot(self.Vbody,World2Truck)
 
-        # Forget rotation for now
+        # Update Position
         p = self.m.getPos()
-        p[0] = p[0] + self.Vbody[1]*dt *-np.sin(np.deg2rad(newYaw))
-        p[1] = p[1] + self.Vbody[1]*dt * np.cos(np.deg2rad(newYaw))
-        self.m.setPos(p)
+        newP = np.array(p) + self.Vworld * dt
+        self.m.setX(newP[0])
+        self.m.setY(newP[1])
+        self.m.setZ(newP[2])
