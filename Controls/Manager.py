@@ -3,7 +3,7 @@ from direct.task import Task
 import sys
 from . import Keyboard
 from . import Controller
-from . import xinput
+#from . import xinput
 from operator import attrgetter
 
 class ControlManager(DirectObject):
@@ -17,7 +17,7 @@ class ControlManager(DirectObject):
         # Start different control inputs
         self.Arrows = Keyboard.Arrows(self)
         self.WASD = Keyboard.WASD(self)
-        self.SearchForControllers()
+        #self.SearchForControllers()
 
     def SearchForControllers(self):
         # Init the search for controllers

@@ -4,10 +4,11 @@ FPS = 30
 class Clock():
     def __init__(self,World):
         self.World = World
-        self.dt = 1/FPS
+        self.dt = 1./FPS
         self.dtcounter = 0
         # List of objects that have an Update(dt) function that needs to be called
         self.UpdateList = []
+        
 
         # The task for our simulation
         def simulationTask(task):
@@ -25,7 +26,8 @@ class Clock():
             return task.cont
 
         taskMgr.add(simulationTask, "Physics Simulation")
-
+        
     def UpdateMe(self,Obj):
         # Add the Object to the list of appendables
+        
         self.UpdateList.append(Obj)
