@@ -230,7 +230,6 @@ class NetworkManager(object):
 
     def writerCallback( self ):
 
-        
         # if there are no events queued, return None
         if not self.eventQueue:
             return None
