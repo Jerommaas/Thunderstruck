@@ -1,10 +1,18 @@
 from panda3d.core import GeoMipTerrain
+from panda3d.core import Filename
 from direct.task import Task
+import sys
 
+import os
 class Terrain:
+    folder = os.path.dirname(os.path.abspath(__file__))
+    subfolder = "/Maps/"
+    file = "simple.jpg"
+    filepath = folder+subfolder+file
     def __init__(self):
+        fn = Filename.fromOsSpecific(self.filepath)
         self.terrain = GeoMipTerrain("mySimpleTerrain")
-        self.terrain.setHeightfield("Entities/Maps/simple.jpg")
+        self.terrain.setHeightfield(fn)
         self.terrain.getRoot().setSz(40)
         #terrain.setBruteforce(True)
         self.terrain.getRoot().reparentTo(render)
@@ -18,9 +26,8 @@ class Terrain:
         # Store the root NodePath for convenience
         root = self.terrain.getRoot()
         root.reparentTo(render)
-        
-        myTexture = loader.loadTexture("Entities/Maps/stars.png")
-        myTexture = loader.loadTexture("Entities/Maps/simple.jpg")
+
+        myTexture = loader.loadTexture(fn)
         self.terrain.getRoot().setTexture(myTexture)
         self.terrain.generate()
         
