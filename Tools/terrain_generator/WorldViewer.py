@@ -12,9 +12,6 @@ from direct.showbase.ShowBase import ShowBase
 from Controls import *
 from Entities import * 
 from Entities.Objects import *
-import WVCamera
-import WVControls
-
 
 class WorldViewer(ShowBase):
     def __init__(self):
@@ -24,10 +21,6 @@ class WorldViewer(ShowBase):
         self.Terrain = Terrain.Terrain()
         self.SkyDome = skyDome.skyDome()
 
-        self.Camera = WVCamera.Camera(self)
-        # User input
-        self.CM = WVControls.ControlManager(self)
-
 if __name__ == "__main__":
-    client  = WorldViewer()
-    client.run()
+    WV  = WorldViewer()
+    WV.run()
