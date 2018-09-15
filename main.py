@@ -1,8 +1,9 @@
 from direct.showbase.ShowBase import ShowBase
-import Entities.Terrain as Terrain
-import Entities.skyDome as SkyDome
-import Controls.Manager as ControlManager
 
+# Als je nieuwe modules hebt voor bij *, voeg de verwijzing 
+# toe in __init__.py van de module!
+from Controls import *
+from Entities import * 
 from Entities.Objects import *
 
 class Thunderstruck_server():
@@ -27,20 +28,24 @@ class Thunderstruck_client(ShowBase):
     def __init__(self,server):
         ShowBase.__init__(self)
 
+        # Init the Global Clock
+        self.Clock = Clock.Clock(self)
+
         # ----- ENTITIES -----
         # World
-        Terrain.Build()
-        SkyDome.Build()
+        self.Terrain = Terrain.Terrain()
+        self.SkyDome = skyDome.skyDome()
         #Light Sources?
         
         # Objects
-        T = Trucks.Basic()
+        self.Truck1 = Trucks.Basic(self)
         
         # Particles
            # Sparks, fire, LIGHTNING
 
+        self.Camera = Camera.Camera(self)
         # User input
-        self.CM = ControlManager.ControlManager()
+        self.CM = Manager.ControlManager(self)
 
         # Server communication
             # Send User controls

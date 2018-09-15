@@ -1,6 +1,7 @@
 from direct.task import Task
 
 class X360():
+    deadzone = 0.4
     def __init__(self, ControlManager,Controller):
         self.CM = ControlManager
         self.Controller = Controller
@@ -25,7 +26,10 @@ class X360():
         @self.Controller.event
         def on_axis(axis, value):
             if axis=="l_thumb_x": # Left stick, horizontal direction
-                self.CM.Steer(max(-1.,value*2)) # Axis values range from [-0.5, 0.5]
+                if abs(value)<self.deadzone:
+                    self.CM.Steer(0)
+                else:
+                    self.CM.Steer(min(1.,value*-2)) # Axis values range from [-0.5, 0.5]
 
         @self.Controller.event
         def on_button(button, pressed):
