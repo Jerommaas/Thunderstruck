@@ -17,6 +17,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import sys
+import gui
 
 getModelPath().appendDirectory('/c/Panda3D-1.9.4-x64/models/') 
 
@@ -50,9 +51,11 @@ class QTTest(QDialog):
 
         self.lineedit = QLineEdit("Write something...does it work?")
         
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
         layout.addWidget(self.pandaContainer)
-        layout.addWidget(self.lineedit)
+
+        user_interface = gui.Gui(self)
+        layout.addWidget(user_interface)
         
         self.setLayout(layout)
         
@@ -98,7 +101,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     form = QTTest(world.step)
-    world.bindToWindow(int(form.winId()))
+    world.bindToWindow(int(form.pandaContainer.winId())) # or form.winId()? 
     
     form.show()
     app.exec_()
