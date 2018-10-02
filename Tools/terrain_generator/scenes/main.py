@@ -22,8 +22,8 @@ import gui
 getModelPath().appendDirectory('/c/Panda3D-1.9.4-x64/models/') 
 
 
-P3D_WIN_WIDTH = 400
-P3D_WIN_HEIGHT = 240
+P3D_WIN_WIDTH = 720
+P3D_WIN_HEIGHT = 560
 
 class QTPandaWidget(QWidget):
 	def __init__(self, parent=None):
@@ -39,7 +39,7 @@ class QTPandaWidget(QWidget):
 	def minimumSizeHint(self):
 		return QSize(400,300)
 
-class QTTest(QDialog):
+class QTMainWindow(QDialog):
     def __init__(self, pandaCallback, parent=None):
         super(QDialog, self).__init__(parent)
         self.setWindowTitle("Test")
@@ -69,13 +69,18 @@ class QTTest(QDialog):
     
 class World(ShowBase):   
     def __init__(self):
-        ShowBase.__init__(self)
+        ShowBase.__init__(self) 
+        # self.loadInitialEnv() # re-enable once gui is done
         self.accept("a", self.pressedA)
         self.accept("escape", sys.exit)
         
     
     def pressedA(self):
         print( "a pressed, keyboard focus ok")
+        self.loadInitialEnv()
+
+
+    def loadInitialEnv(self):
         # Load the environment model.
         self.scene = loader.loadModel("environment")
         # Reparent the model to render.
@@ -94,14 +99,20 @@ class World(ShowBase):
         wp.setParentWindow(windowHandle)
         base.openDefaultWindow(props=wp )
         self.wp = wp
-        
-    
-if __name__ == '__main__':
+
+def main():
     world = World()
 
     app = QApplication(sys.argv)
-    form = QTTest(world.step)
-    world.bindToWindow(int(form.pandaContainer.winId())) # or form.winId()? 
+    window = QTMainWindow(world.step)
+    world.bindToWindow(int(window.winId())) # window.pandaContainer.winId() or window.winId()? 
     
-    form.show()
+    window.show()
     app.exec_()
+
+    # ensure both qt and panda close
+    sys.exit()
+     
+    
+if __name__ == '__main__':
+    main()
