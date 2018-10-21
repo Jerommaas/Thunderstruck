@@ -64,9 +64,10 @@ class tab_file(QWidget):
         # TODO: export options   
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName = QFileDialog.getSaveFileName(self, 'Export To ...',  "","All Files (*);;Python Files (*.py)", options=options)
+        fileName, _ = QFileDialog.getSaveFileName(self, 'Export To ...',  "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
             print("save as: {}".format(fileName) )
+            self.pandaWorld.loader.save_scene(fileName)
         
 class tab_terrain(QWidget):
     '''
@@ -119,15 +120,9 @@ class tab_object(QWidget):
         self.objectTreeView.setColumnHidden(2, True)
         self.objectTreeView.setColumnHidden(3, True) 
         self.objectTreeView.setRootIndex(self.treeview_model.index(folder))
-        self.objectTreeView.setSortingEnabled(True)
-         
-        # self.objectTreeView.setRootIndex(model->index(pathToRootFolder, 0));
-        self.objectTreeView.setAnimated(False)
-        #self.objectTreeView.sortByColumn(2, Qt::AscendingOrder);
-        #self.objectTreeView.setColumnWidth(0, 250);
-        self.objectTreeView.setSelectionMode(QAbstractItemView.SingleSelection) 
-        #self.objectTreeView.selectionChanged.connect(self.treeSelectionChange)
-
+        self.objectTreeView.setSortingEnabled(True) 
+        self.objectTreeView.setAnimated(False) 
+        self.objectTreeView.setSelectionMode(QAbstractItemView.SingleSelection)   
         self.objectTreeView.selectionModel().selectionChanged.connect(self.treeSelectionChange)
 
         # button
@@ -150,15 +145,10 @@ class tab_object(QWidget):
             indexItem = self.treeview_model.index(idx.row(), 0, idx.parent()) 
             fileName = self.treeview_model.fileName(indexItem)
             filePath = self.treeview_model.filePath(indexItem)
-            print( "full path:\y{}\nfile: \t{}".format(filePath, fileName))
-            self.label.setText(filePath)
-
-        # QItemSelection.index()[0].data().toPyObject()  
-        # indexItem = self.treeview_model.index(index.row(), 0, index.parent()) 
-        # fileName = self.treeview_model.fileName(indexItem)
-        # filePath = self.treeview_model.filePath(indexItem)
-        # print( "{}, {}".format(filePath, fileName))
-        
+            print( "full path:\t{}\nfile: \t\t{}".format(filePath, fileName))
+            self.label.setText(filePath) 
+            # TODO(victor): detect if this is a file or a folder
+            # TODO(victor): disable selecting folders
 
 
 
@@ -206,12 +196,6 @@ class Gui(QWidget):
         self.tabs.addTab(self.tab_terrain,"Terrain")
         self.tabs.addTab(self.tab_object,"Objects")
         self.tabs.addTab(self.tab_game_elements, "Game elements") 
- 
-        # # Create first tab
-        # self.tab_file.layout = QVBoxLayout(self)
-        # self.pushButton1 = QPushButton("PyQt5 button")
-        # self.tab_file.layout.addWidget(self.pushButton1)
-        # self.tab_file.setLayout(self.tab_file.layout)
  
         # Add tabs to widget        
         self.layout.addWidget(self.tabs)

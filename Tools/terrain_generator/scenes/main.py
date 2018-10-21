@@ -15,7 +15,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 # local
-
 import gui
 from pandaWorld import World
 

@@ -19,6 +19,7 @@ P3D_WIN_HEIGHT = 560
 # This class manages all objects in the scene, loads/saves, etc.
 #
 
+import json
 class PandaLoader(object):
     def __init__(self, world):
         self.world = world 
@@ -26,9 +27,23 @@ class PandaLoader(object):
 
     def load_scene(self, file):
         print( "PandaLoader.load_scene():\n\t{}".format( file  ) )
+        self.world.loadInitialEnv() # TEMP
+        world = self.world # shorthand
+        with open(file) as f:
+            data = json.load(f)
+            self.json_data = data
+            world.name = data.get('name', '<world name>') 
+            world.version = data.get('version', 0) 
+
 
     def save_scene(self, file):
-        print( "PandaLoader.save_scene():\n\t{}".format( file  ) )
+        print( "PandaLoader.save_scene():\n\t{}".format( file  ) ) 
+        world = self.world
+        data = self.json_data
+        data["version"] = world.version+1
+        data["name"] = world.name
+        with open(file, "w") as f:
+            json.dump(data, f, indent=4)
 
     def load_object(self, file):
         obj = data_object.data_object()
@@ -47,6 +62,10 @@ class World(ShowBase):
         # self.loadInitialEnv() # re-enable once gui is done
         self.accept("a", self.pressedA)
         self.accept("escape", sys.exit)
+        
+        # fields from save file
+        self.name = "<world name>"
+        self.version = 0
         
     
     def pressedA(self):
