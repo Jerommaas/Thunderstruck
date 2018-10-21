@@ -88,9 +88,10 @@ class tab_object(QWidget):
     '''
     adding / editing / removing / animating objects
     '''
-    def __init__(self, parent):   
+    def __init__(self, parent, pandaWorld=None):   
         super(QWidget, self).__init__(parent) 
         self.layout = QVBoxLayout(self)
+        self.pandaWorld = pandaWorld
 
         # tree 
         self.objectTreeView = QTreeView(self)
@@ -105,33 +106,27 @@ class tab_object(QWidget):
         folder = "C:/Users/Victor/Desktop/thunderstruck/Thunderstruck/Entities/"
         print( "opening treeview in: {}".format(folder) )
 
-        #self.treeview_model.setRootPath(folder)
+        # 
         self.objectTreeView.setModel(self.treeview_model)
         self.objectTreeView.setColumnHidden(1, True)
         self.objectTreeView.setColumnHidden(2, True)
-        self.objectTreeView.setColumnHidden(3, True)
-        
+        self.objectTreeView.setColumnHidden(3, True) 
         self.objectTreeView.setRootIndex(self.treeview_model.index(folder))
         self.objectTreeView.setSortingEnabled(True)
 
-
-        self.layout.addWidget(self.objectTreeView)
-
-        # other
+        # button
         qdir = QDir(path=folder) 
         self.pointlessButton = QPushButton(qdir.absolutePath()) 
-        self.layout.addWidget(self.pointlessButton)
 
         # finalize
+        self.layout.addWidget(self.pointlessButton)
+        self.layout.addWidget(self.objectTreeView)
         self.setLayout(self.layout)
 
 class tab_texture(QWidget):
     def __init__(self, parent):   
         super(QWidget, self).__init__(parent)
 
-class tab_blend(QWidget):
-    def __init__(self, parent):   
-        super(QWidget, self).__init__(parent)
 
 class tab_game_elements(QWidget):
     '''
@@ -141,8 +136,10 @@ class tab_game_elements(QWidget):
         super(QWidget, self).__init__(parent)
 
 class Gui(QWidget): 
-    def __init__(self, parent):   
+    def __init__(self, parent, pandaWorld=None):   
         super(QWidget, self).__init__(parent)
+        self.pandaWorld = pandaWorld
+
         self.layout = QVBoxLayout(self)
  
         # Initialize tab screen
