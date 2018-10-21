@@ -38,7 +38,7 @@ class QTPandaWidget(QWidget):
 		return QSize(400,300)
 
 class QTMainWindow(QDialog):
-    def __init__(self, pandaWorld, parent=None):
+    def __init__(self, pandaWorld=None, parent=None):
         super(QDialog, self).__init__(parent)
         self.setWindowTitle("Test")
         s = 80
@@ -48,7 +48,7 @@ class QTMainWindow(QDialog):
  
         layout = QHBoxLayout()
         layout.addWidget(self.pandaContainer) 
-        user_interface = gui.Gui(self)
+        user_interface = gui.Gui(self, pandaWorld=pandaWorld)
         layout.addWidget(user_interface)
         
         self.setLayout(layout) 
@@ -66,7 +66,7 @@ def main():
     pandaWorld = World()
 
     app = QApplication(sys.argv)
-    window = QTMainWindow(pandaWorld) 
+    window = QTMainWindow(pandaWorld=pandaWorld) 
     window.show()
 
     # ensure both qt and panda close

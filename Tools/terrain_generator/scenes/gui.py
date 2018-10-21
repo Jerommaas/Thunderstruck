@@ -13,15 +13,16 @@ import main
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import * 
 
 
 class tab_file(QWidget):
     '''
     Handles loading, saving(, exporting?) of the scene 
     '''
-    def __init__(self, parent):   
-        super(QWidget, self).__init__(parent)        
+    def __init__(self, parent, pandaWorld=None):   
+        super(QWidget, self).__init__(parent)      
+        self.pandaWorld = pandaWorld  
         self.layout = QVBoxLayout(self)
 
         # save button 
@@ -47,14 +48,17 @@ class tab_file(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         fileName = QFileDialog.getSaveFileName(self, 'Save File',  "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
-            print("save as: {}".format(fileName) )
+            print("save file as: {}".format(fileName) )
+            self.pandaWorld.loader.save_scene(fileName)
 
     def loadDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self,"Load File", "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
-            print("save as: {}".format(fileName) )
+            print("load file: {}".format(fileName) )
+            print( self.pandaWorld )
+            self.pandaWorld.loader.load_scene(fileName)
 
     def saveDialog(self): 
         # TODO: export options   
@@ -71,9 +75,12 @@ class tab_terrain(QWidget):
     - texture blending, 
     - skyboxes, skybox objects (distant buildings/mountains etc.)
     '''
-    def __init__(self, parent):   
-        super(QWidget, self).__init__(parent)
-
+    def __init__(self, parent, pandaWorld=None):   
+        super(QWidget, self).__init__(parent)  
+        self.layout = QVBoxLayout(self)
+        label = QLabel(self)
+        label.setText("Terrain tab")
+        self.layout.addWidget(label)
 
 def populateTree( tree, parent ):
     # TODO(victor): move to some util class
@@ -99,10 +106,10 @@ class tab_object(QWidget):
         # tree model
         self.treeview_model = QDirModel()   
         self.treeview_model.setFilter( QDir.NoSymLinks |  QDir.AllDirs | QDir.NoDotAndDotDot | QDir.Files | QDir.DirsFirst) 
-        self.treeview_model.setNameFilters( ["*.egg"] )
-        
+        self.treeview_model.setNameFilters( ["*.egg"] ) 
         self.treeview_model.setSorting( QDir.Reversed)
         
+        # TODO(victor): no hardcoded paths, get this at startup
         folder = "C:/Users/Victor/Desktop/thunderstruck/Thunderstruck/Entities/"
         print( "opening treeview in: {}".format(folder) )
 
@@ -113,27 +120,69 @@ class tab_object(QWidget):
         self.objectTreeView.setColumnHidden(3, True) 
         self.objectTreeView.setRootIndex(self.treeview_model.index(folder))
         self.objectTreeView.setSortingEnabled(True)
+         
+        # self.objectTreeView.setRootIndex(model->index(pathToRootFolder, 0));
+        self.objectTreeView.setAnimated(False)
+        #self.objectTreeView.sortByColumn(2, Qt::AscendingOrder);
+        #self.objectTreeView.setColumnWidth(0, 250);
+        self.objectTreeView.setSelectionMode(QAbstractItemView.SingleSelection) 
+        #self.objectTreeView.selectionChanged.connect(self.treeSelectionChange)
+
+        self.objectTreeView.selectionModel().selectionChanged.connect(self.treeSelectionChange)
 
         # button
         qdir = QDir(path=folder) 
         self.pointlessButton = QPushButton(qdir.absolutePath()) 
 
+        # label
+        self.label = QLabel(self)
+        self.label.setText("<file path>")
+
         # finalize
         self.layout.addWidget(self.pointlessButton)
         self.layout.addWidget(self.objectTreeView)
+        self.layout.addWidget(self.label)
         self.setLayout(self.layout)
+    
+    def treeSelectionChange(self, index):  
+        print("Selection changed:")
+        for idx in self.objectTreeView.selectedIndexes():  
+            indexItem = self.treeview_model.index(idx.row(), 0, idx.parent()) 
+            fileName = self.treeview_model.fileName(indexItem)
+            filePath = self.treeview_model.filePath(indexItem)
+            print( "full path:\y{}\nfile: \t{}".format(filePath, fileName))
+            self.label.setText(filePath)
+
+        # QItemSelection.index()[0].data().toPyObject()  
+        # indexItem = self.treeview_model.index(index.row(), 0, index.parent()) 
+        # fileName = self.treeview_model.fileName(indexItem)
+        # filePath = self.treeview_model.filePath(indexItem)
+        # print( "{}, {}".format(filePath, fileName))
+        
+
+
+
 
 class tab_texture(QWidget):
-    def __init__(self, parent):   
+    def __init__(self, parent, pandaWorld=None):   
         super(QWidget, self).__init__(parent)
+        self.layout = QVBoxLayout(self)
+        label = QLabel(self)
+        label.setText("Texture tab")
+        self.layout.addWidget(label)
 
 
 class tab_game_elements(QWidget):
     '''
     In this window, things like finish lines, invisible walls, event triggers, etc. can be edited
     '''
-    def __init__(self, parent):   
+    def __init__(self, parent, pandaWorld=None):   
         super(QWidget, self).__init__(parent)
+        self.layout = QVBoxLayout(self)
+        self.pandaWorld = pandaWorld
+        label = QLabel(self)
+        label.setText("Game elements tab")
+        self.layout.addWidget(label)
 
 class Gui(QWidget): 
     def __init__(self, parent, pandaWorld=None):   
@@ -145,11 +194,10 @@ class Gui(QWidget):
         # Initialize tab screen
         self.tabs = QTabWidget()
 
-        self.tab_file = tab_file(self)	
-        self.tab_terrain = tab_terrain(self)
-        self.tab_object = tab_object(self)
-        self.tab_game_elements = tab_game_elements(self)
-        self.tab_export = tab_terrain(self) 
+        self.tab_file = tab_file(self, pandaWorld=pandaWorld)	
+        self.tab_terrain = tab_terrain(self, pandaWorld=pandaWorld)
+        self.tab_object = tab_object(self, pandaWorld=pandaWorld)
+        self.tab_game_elements = tab_game_elements(self, pandaWorld=pandaWorld) 
     
         self.tabs.resize(300,200) 
  
@@ -157,8 +205,7 @@ class Gui(QWidget):
         self.tabs.addTab(self.tab_file,"File")
         self.tabs.addTab(self.tab_terrain,"Terrain")
         self.tabs.addTab(self.tab_object,"Objects")
-        self.tabs.addTab(self.tab_game_elements, "Game elements")
-        self.tabs.addTab(self.tab_export,"Export") 
+        self.tabs.addTab(self.tab_game_elements, "Game elements") 
  
         # # Create first tab
         # self.tab_file.layout = QVBoxLayout(self)
