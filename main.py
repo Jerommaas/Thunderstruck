@@ -5,7 +5,9 @@ from direct.showbase.ShowBase import ShowBase
 from Controls import *
 from Entities import * 
 from Entities.Objects import *
+import sys
 
+print(sys.version)
 class Thunderstruck_server():
     def __init__(self):
         pass
@@ -30,12 +32,12 @@ class Thunderstruck_client(ShowBase):
 
         # Init the Global Clock
         self.Clock = Clock.Clock(self)
-
+        
         # ----- ENTITIES -----
         # World
         self.Terrain = Terrain.Terrain()
         self.SkyDome = skyDome.skyDome()
-        #Light Sources?
+        #Light Sources? (or weather, see also particles)
         
         # Objects
         self.Truck1 = Trucks.Basic(self)
@@ -46,7 +48,7 @@ class Thunderstruck_client(ShowBase):
         self.Camera = Camera.Camera(self)
         # User input
         self.CM = Manager.ControlManager(self)
-
+        
         # Server communication
             # Send User controls
             # Receive Trucks locations
