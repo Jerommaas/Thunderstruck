@@ -2,6 +2,7 @@
 
 
 import sys
+import inspect
 
 # Panda 
 from panda3d.core import *
@@ -9,7 +10,7 @@ from direct.showbase.ShowBase import ShowBase
 
 # local
 import main
-import data_object
+from data_object import *
 
 
 P3D_WIN_WIDTH = 720
@@ -20,6 +21,11 @@ P3D_WIN_HEIGHT = 560
 #
 
 import json
+
+
+def str_to_class(str):
+    return reduce(getattr, str.split("."), sys.modules[__name__])
+
 class PandaLoader(object):
     def __init__(self, world):
         self.world = world 
@@ -34,6 +40,20 @@ class PandaLoader(object):
             self.json_data = data
             world.name = data.get('name', '<world name>') 
             world.version = data.get('version', 0) 
+            json_objects = data["objects"]
+            for obj in json_objects:
+                try: 
+                    subtype = globals()[obj["type"] ] 
+                except:
+                    print( "unknown type: {}".format(obj["type"]) )
+                    continue
+
+                if issubclass(subtype, data_object):
+                    instance = subtype( obj["data"]  )
+                    instance.name = obj["name"]  
+                    self.objects.append(instance)
+                else:
+                    print("type is not a subclass of data_type!")
 
 
     def save_scene(self, file):
@@ -42,6 +62,16 @@ class PandaLoader(object):
         data = self.json_data
         data["version"] = world.version+1
         data["name"] = world.name
+        data["objects"] = []
+
+        print( "saving objects")
+        for obj in self.objects:
+            json_data = dict()
+            json_data["name"] = obj.name
+            json_data["type"] = type(obj).__name__
+            json_data["data"] = obj.save()
+            data["objects"].append( json_data  )
+            
         with open(file, "w") as f:
             json.dump(data, f, indent=4)
 
@@ -95,4 +125,4 @@ class World(ShowBase):
 
 
 if __name__ == "__main__":
-    main.start()
+    main.main()

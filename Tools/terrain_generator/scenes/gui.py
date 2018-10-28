@@ -66,7 +66,6 @@ class tab_file(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(self, 'Export To ...',  "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
-            print("save as: {}".format(fileName) )
             self.pandaWorld.loader.save_scene(fileName)
         
 class tab_terrain(QWidget):

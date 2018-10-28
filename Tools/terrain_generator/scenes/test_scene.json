@@ -16,5 +16,23 @@
         }
     ],
     "name": "first map",
-    "version": 3
+    "version": 12,
+    "objects": [
+        {
+            "name": "object_1",
+            "type": "terrain_object",
+            "data": {
+                "first_field": 5,
+                "second_field": 6
+            }
+        },
+        {
+            "name": "object_2",
+            "type": "panda_object",
+            "data": {
+                "first_field": 5,
+                "second_field": 6
+            }
+        }
+    ]
 }
