@@ -1,19 +1,45 @@
 {
-    "map_functions": [
+    "name": "first map",
+    "version": 17,
+    "objects": [
         {
-            "name": "Round Hill",
-            "class_name": "RoundHill",
-            "id": 2,
-            "children_ids": []
+            "name": "object_1",
+            "type": "terrain_object",
+            "data": {
+                "textures": [
+                    "<some texture file>",
+                    "<some other texture file>"
+                ],
+                "height": "<some height map>",
+                "blend": "<some blend map>",
+                "xyz": [
+                    0,
+                    0,
+                    0
+                ],
+                "rot": [
+                    0,
+                    0,
+                    0
+                ]
+            }
         },
         {
-            "name": "<Main>",
-            "class_name": "Transform2d",
-            "id": 3,
-            "children_ids": [
-                2
-            ]
+            "name": "object_2",
+            "type": "panda_object",
+            "data": {
+                "model": null,
+                "xyz": [
+                    0,
+                    0,
+                    0
+                ],
+                "rot": [
+                    0,
+                    0,
+                    0
+                ]
+            }
         }
-    ],
-    "name": "first map"
+    ]
 }
