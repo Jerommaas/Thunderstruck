@@ -61,5 +61,25 @@ class panda_object(data_object):
         return json_data
 
 
+
+class skybox_object(data_object):
+    """
+    skybox object
+    """
+    def __init__(self, json_data):
+        # set default values
+        self.model = "<some .egg file>"
+        self.xyz = [0,0,0]
+        self.rot = [0,0,0]
+        # override with data in json
+        return super().__init__(json_data)
+        
+    def save( self ):        
+        json_data = { "model": self.model, 
+                      "xyz": self.xyz, 
+                      "rot": self.rot}
+        return json_data
+
+
 if __name__ == "__main__":
     main.main()
