@@ -78,6 +78,7 @@ class Terrain:
         self.grassTexture.setWrapU(Texture.WMRepeat)
         self.grassTexture.setWrapV(Texture.WMRepeat)
         self.grassTexture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
+        self.grassTexture.setAnisotropicDegree(8)
         self.grassTS = TextureStage('grass')
         self.grassTS.setSort(1) # sorting order is relevent for assigning textures to the four 
         
@@ -85,6 +86,7 @@ class Terrain:
         self.rockTexture.setWrapU(Texture.WMRepeat)
         self.rockTexture.setWrapV(Texture.WMRepeat)
         self.rockTexture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
+        #self.grassTexture.setAnisotropicDegree(8)
         self.rockTS = TextureStage('rock')
         self.rockTS.setSort(2)
         # self.rockTS.setCombineRgb(TextureStage.CMAdd, TextureStage.CSLastSavedResult, TextureStage.COSrcColor, TextureStage.CSTexture, TextureStage.COSrcColor)
@@ -93,6 +95,7 @@ class Terrain:
         self.sandTexture.setWrapU(Texture.WMRepeat)
         self.sandTexture.setWrapV(Texture.WMRepeat)
         self.sandTexture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
+        #self.sandTexture.setAnisotropicDegree(8)
         self.sandTS = TextureStage('sand')
         self.sandTS.setSort(3)
         self.sandTS.setPriority(5) # TODO: figure out what this is for...
@@ -101,6 +104,7 @@ class Terrain:
         self.snowTexture.setWrapU(Texture.WMRepeat)
         self.snowTexture.setWrapV(Texture.WMRepeat)
         self.snowTexture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
+        #self.snowTexture.setAnisotropicDegree(8)
         self.snowTS = TextureStage('snow')
         self.snowTS.setSort(4)
         self.snowTS.setPriority(0)
@@ -110,6 +114,7 @@ class Terrain:
         self.overlayTexture.setWrapU(Texture.WMRepeat)
         self.overlayTexture.setWrapV(Texture.WMRepeat)
         self.overlayTexture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
+        #self.overlayTexture.setAnisotropicDegree(8)
         self.overlayTS = TextureStage('overlay')
         self.overlayTS.setSort(5)
         self.overlayTS.setPriority(10)

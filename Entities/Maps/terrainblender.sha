@@ -21,10 +21,10 @@ void vshader( in float4 vtx_position  : POSITION,
      l_texcoord0 = vtx_texcoord0;
      
     //detail texture coordinates scaled, we must get the correct scale fator to make terrain look like in EarthSculptor
-     l_detail1 = vtx_texcoord0 * k_size/2;// * 50;   //27.365000 in EarthSculptor
-     l_detail2 = vtx_texcoord0 * k_size/2;// * 12.8;  //20.000000 in EarthSculptor
-     l_detail3 = vtx_texcoord0 * k_size/2;// * 11.5;  //22.389999 in EarthSculptor
-     l_detail4 = vtx_texcoord0 * k_size/2;// * 11.5;  //22.389999 in EarthSculptor
+     l_detail1 = vtx_texcoord0 * k_size/8;// * 50;   //27.365000 in EarthSculptor
+     l_detail2 = vtx_texcoord0 * k_size/8;// * 12.8;  //20.000000 in EarthSculptor
+     l_detail3 = vtx_texcoord0 * k_size/8;// * 11.5;  //22.389999 in EarthSculptor
+     l_detail4 = vtx_texcoord0 * k_size/8;// * 11.5;  //22.389999 in EarthSculptor
      l_detail5 = vtx_texcoord0;// * 0.5;
      //l_detail6 = vtx_texcoord0 * k_size;
 }
