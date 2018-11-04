@@ -49,8 +49,22 @@ class XINPUT_BATTERY_INFORMATION(ctypes.Structure):
     _fields_ = [("BatteryType", ctypes.c_ubyte),
                 ("BatteryLevel", ctypes.c_ubyte)]
 
-xinput = ctypes.windll.xinput1_4
-#xinput = ctypes.windll.xinput9_1_0  # this is the Win 8 version ?
+
+#xinput = ctypes.windll.xinput1_4 # win 8 and alter
+
+# see also https://docs.microsoft.com/en-us/windows/desktop/xinput/xinput-versions
+try:
+    xinput = ctypes.windll.xinput1_4 # win 8 and alter
+except:
+    try:
+        xinput = ctypes.windll.xinput9_1_0  # Vista, Win7, Win 8. basic functionality only
+    except:
+        try:
+            xinput = ctypes.windll.xinput1_3 # Vista, Win7, Win8 distributable version. supports more than 9_1_0?
+        except:
+            pass
+
+#
 # xinput1_2, xinput1_1 (32-bit Vista SP1)
 # xinput1_3 (64-bit Vista SP1)
 
