@@ -58,6 +58,15 @@ class PandaLoader(object):
                     self.objects.append(instance)
                 else:
                     print("type is not a subclass of data_type!")
+        
+        # TODO(victor): super hacky, los dit goed op
+        for obj in self.objects: 
+            if hasattr( obj, "model"):
+                obj_file = obj.model
+                if obj_file:
+                    print( "loading model: {}".format(obj_file) )
+                    model = loader.loadModel(obj_file) 
+                    model.reparentTo(self.world.render)
 
 
     def save_scene(self, file):
@@ -110,9 +119,9 @@ class World(ShowBase):
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
         # Apply scale and position transforms on the model.
-        s = 0.1
+        s = 0.02
         self.scene.setScale(s,s,s)
-        self.scene.setPos(-8, 42, 0)
+        # self.scene.setPos(-8, 42, 0)
         
     def step(self):
         taskMgr.step()
