@@ -11,6 +11,7 @@ from direct.showbase.ShowBase import ShowBase
 # local
 import main
 from data_object import *
+from camera import Camera
 
 
 P3D_WIN_WIDTH = 720
@@ -30,6 +31,7 @@ class PandaLoader(object):
     def __init__(self, world):
         self.world = world 
         self.objects = []
+        self.events  = [] # list of user actions (add, move, edit object etc.)
 
     def load_scene(self, file):
         print( "PandaLoader.load_scene():\n\t{}".format( file  ) )
@@ -42,12 +44,14 @@ class PandaLoader(object):
             world.version = data.get('version', 0) 
             json_objects = data["objects"]
             for obj in json_objects:
+                # try to find this type
                 try: 
                     subtype = globals()[obj["type"] ] 
                 except:
                     print( "unknown type: {}".format(obj["type"]) )
                     continue
 
+                # check if this class is a subclass of data_object
                 if issubclass(subtype, data_object):
                     instance = subtype( obj["data"]  )
                     instance.name = obj["name"]  
@@ -80,6 +84,7 @@ class PandaLoader(object):
         self.objects.append( obj )
         return obj
 
+
   
 #
 # this class constructs the panda frame, used for visualizing the current world
@@ -88,20 +93,16 @@ class PandaLoader(object):
 class World(ShowBase):   
     def __init__(self):
         ShowBase.__init__(self) 
-        self.loader = PandaLoader(self)
-        # self.loadInitialEnv() # re-enable once gui is done
-        self.accept("a", self.pressedA)
+        self.loader = PandaLoader(self) 
         self.accept("escape", sys.exit)
+
+        # add camera object
+        self.cam = Camera(self)
         
         # fields from save file
         self.name = "<world name>"
         self.version = 0
         
-    
-    def pressedA(self):
-        print( "a pressed, keyboard focus ok")
-        self.loadInitialEnv()
-
 
     def loadInitialEnv(self):
         # Load the environment model.
@@ -109,7 +110,8 @@ class World(ShowBase):
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
         # Apply scale and position transforms on the model.
-        self.scene.setScale(0.25, 0.25, 0.25)
+        s = 0.1
+        self.scene.setScale(s,s,s)
         self.scene.setPos(-8, 42, 0)
         
     def step(self):
