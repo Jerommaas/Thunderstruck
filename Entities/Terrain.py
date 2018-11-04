@@ -1,8 +1,15 @@
 from panda3d.core import GeoMipTerrain, Texture, TextureStage,SamplerState
 from direct.task import Task
+import sys
 
+import os
 class Terrain:
+    folder = os.path.dirname(os.path.abspath(__file__))
+    subfolder = "/Maps/"
+    file = "simple.jpg"
+    filepath = folder+subfolder+file
     def __init__(self):
+        fn = Filename.fromOsSpecific(self.filepath)
         self.terrain = GeoMipTerrain("mySimpleTerrain")
         self.terrain.setHeightfield("Entities/Maps/heightmap.png")
         self.terrain.getRoot().setSz(40)
