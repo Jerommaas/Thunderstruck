@@ -43,23 +43,6 @@
         },
         
         {
-            "name": "small house",
-            "type": "panda_object",
-            "data": {
-                "model": "/c/Users/Victor/Desktop/thunderstruck/Thunderstruck/Entities/Objects/Models/Environment/small_house.egg",
-                "xyz": [
-                    0,
-                    0,
-                    0
-                ],
-                "rot": [
-                    0,
-                    0,
-                    0
-                ]
-            }
-        },
-        {
             "name": "skybox",
             "type": "skybox_object",
             "data": {
