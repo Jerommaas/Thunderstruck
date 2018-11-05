@@ -3,7 +3,7 @@
     "version": 17,
     "objects": [
         {
-            "name": "object_1",
+            "name": "terrain",
             "type": "terrain_object",
             "data": {
                 "textures": [
@@ -25,8 +25,26 @@
             }
         },
         {
-            "name": "object_2",
+            "name": "pine tree",
             "type": "panda_object",
+            "data": {
+                "model": "/c/Users/Victor/Desktop/thunderstruck/Thunderstruck/Entities/Objects/Models/Environment/pine_tree_02.egg",
+                "xyz": [
+                    0,
+                    0,
+                    0
+                ],
+                "rot": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        
+        {
+            "name": "skybox",
+            "type": "skybox_object",
             "data": {
                 "model": null,
                 "xyz": [
